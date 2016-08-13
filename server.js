@@ -120,7 +120,7 @@ var SampleApp = function() {
      */
     self.initializeServer = function() {
         self.createRoutes();
-        self.app = express.createServer();
+        self.app = express();
         self.app.use(bodyParser.json());
         self.app.use(bodyParser.urlencoded({ extended: true }));
 

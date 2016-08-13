@@ -2,7 +2,7 @@
 //  OpenShift sample Node application
 var express = require('express');
 var fs      = require('fs');
-
+var bodyParser = require("body-parser"); 
 
 /**
  *  Define the sample application.
@@ -95,10 +95,17 @@ var SampleApp = function() {
     self.createRoutes = function() {
         self.routes = { };
 
-        self.routes['/asciimo'] = function(req, res) {
-            var link = "http://i.imgur.com/kmbjB.png";
-            res.send("<html><body><img src='" + link + "'></body></html>");
-        };
+        self.routes['/polvalue'] = function(req, res) {
+            var valuemock = {
+                    "policy": req.query.policy,
+                    "valuation": req.query.policy / 3
+                  }
+                if(!req.query.policy) {
+                    return res.send({"status": "error", "message": "missing policy no."});
+                } else {
+                    return res.send(valuemock);
+                }
+            };
 
         self.routes['/'] = function(req, res) {
             res.setHeader('Content-Type', 'text/html');
@@ -114,6 +121,8 @@ var SampleApp = function() {
     self.initializeServer = function() {
         self.createRoutes();
         self.app = express.createServer();
+        self.app.use(bodyParser.json());
+        self.app.use(bodyParser.urlencoded({ extended: true }));
 
         //  Add handlers for the app (from the routes).
         for (var r in self.routes) {

@@ -103,6 +103,7 @@ var SampleApp = function() {
                 if(!req.query.policy) {
                     return res.send({"status": "error", "message": "missing policy no."});
                 } else {
+                	res.setHeader('Content-Type', 'application/json');
                     return res.send(valuemock);
                 }
             };

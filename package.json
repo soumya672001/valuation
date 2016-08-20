@@ -27,7 +27,8 @@
   },
   "dependencies": {
     "body-parser": "^1.15.2",
-    "express": "~3.4.4"
+    "express": "~3.4.4",
+    "mongojs": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],

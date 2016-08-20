@@ -108,6 +108,36 @@ var SampleApp = function() {
                 }
             };
 
+            self.routes['/policyvalue'] = function(req, res) {
+            	// default to a 'localhost' configuration:
+            	var connection_string = '127.0.0.1:27017/valuation';
+            	// if OPENSHIFT env variables are present, use the available connection info:
+            	if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
+            	  connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
+            	  process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
+            	  process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+            	  process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
+            	  process.env.OPENSHIFT_APP_NAME;
+            	}
+            	var mongojs = require('mongojs');
+            	var db = mongojs(connection_string, ['policy']);
+            	var policies = db.collection('policy');
+            	// similar syntax as the Mongo command-line interface
+            	// log each of the first ten docs in the collection
+            	var retJson;
+            	db.policies.find({first_name: req.query.first_name}, {last_name: req.query.last_name}).forEach(function(err, doc) {
+            	  if (err) throw err;
+            	  if (doc) { console.dir(doc);
+            	             retJson = doc.policies  }
+            	});
+                    if(!req.query.first_name) {
+                        return res.send({"status": "error", "message": "missing name."});
+                    } else {
+                    	res.setHeader('Content-Type', 'application/json');
+                        return res.send(retJson);
+                    }
+                };
+
         self.routes['/'] = function(req, res) {
             res.setHeader('Content-Type', 'text/html');
             res.send(self.cache_get('index.html') );

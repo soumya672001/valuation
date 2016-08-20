@@ -126,7 +126,7 @@ var SampleApp = function() {
             	// log each of the first ten docs in the collection
             	var retJson;
            // 	db.policies.find({first_name: req.query.first_name}, {last_name: req.query.last_name}).forEach(function(err, doc) {
-            	policies.find({first_name: req.query.first_name}, {last_name: req.query.last_name}).forEach(function(err, doc) {  
+            	policies.find({first_name: req.query.first_name, last_name: req.query.last_name}).forEach(function(err, doc) {  
             	  if (err) throw err;
             	  if (doc) { console.dir(doc);
             	             retJson = doc.policies  }

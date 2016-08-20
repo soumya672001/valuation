@@ -130,7 +130,7 @@ var SampleApp = function() {
             	  if (err) throw err;
             	  if (doc) { console.log(doc.policies);
             		  		 console.dir(doc);
-            	             retJson = doc.policies  }
+            	             retJson = JSON.parse(doc.policies)  }
             	});
                     if(!req.query.first_name) {
                         return res.send({"status": "error", "message": "missing name."});

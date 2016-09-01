@@ -131,13 +131,13 @@ var SampleApp = function() {
                  } else {
                 	 res.setHeader('Content-Type', 'application/json'); 
                  	policies.find({"first_name": req.query.first_name, "last_name": req.query.last_name}).forEach(function(err, doc) {  
-                  	  //if (err) throw err;
-                  	  if (err) {return res.send(null);}
+                  	  if (err) throw err;
                   	  if (doc) { console.log(doc.policies);
                   		  		 console.dir(doc);
                   	             retJson = JSON.stringify(doc.policies);
                   	             console.log(retJson);
                   	           return res.send(retJson);}
+                  	  else {return res.send(null);}
                   	}); 
         //        	res.setHeader('Content-Type', 'application/json');
         //            return res.send(retJson);

@@ -131,7 +131,8 @@ var SampleApp = function() {
                  } else {
                 	 res.setHeader('Content-Type', 'application/json'); 
                  	policies.find({"first_name": req.query.first_name, "last_name": req.query.last_name}).forEach(function(err, doc) {  
-                  	  if (err) throw err;
+                  	  //if (err) throw err;
+                  	  if (err) {return res.send(null);}
                   	  if (doc) { console.log(doc.policies);
                   		  		 console.dir(doc);
                   	             retJson = JSON.stringify(doc.policies);

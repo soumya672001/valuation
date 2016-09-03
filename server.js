@@ -165,7 +165,7 @@ var SampleApp = function() {
                 if(!req.query.username) {
                     return res.send({"status": "error", "message": "missing username."});
                  } else {
-                	 res.setHeader('Content-Type', 'application/json'); 
+                //	 res.setHeader('Content-Type', 'application/json'); 
                  	logins.findOne({"username": req.query.username, "password": req.query.password}, function(err, doc) {  
                   	  if (err) throw err;
                   	  if (doc) { console.log(doc.logins);
@@ -176,10 +176,11 @@ var SampleApp = function() {
                   	                  };
                   	             console.log(retJson);
                   	           console.log(JSON.stringify(doc.logins));
+                  	         res.setHeader('Content-Type', 'application/json'); 
                   	           return res.send(retJson);}
                   	  else {
                   		  res.writeHead(404);
-                  		  return res.send(null);}
+                  		  return res.end();}
                   	}); 
         //        	res.setHeader('Content-Type', 'application/json');
         //            return res.send(retJson);

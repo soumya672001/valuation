@@ -144,6 +144,72 @@ var SampleApp = function() {
                 }
             };
 
+            self.routes['/authenticate'] = function(req, res) {
+            	// default to a 'localhost' configuration:
+            	var connection_string = '127.0.0.1:27017/valuation';
+            	// if OPENSHIFT env variables are present, use the available connection info:
+            	if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
+            	  connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
+            	  process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
+            	  process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+            	  process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
+            	  process.env.OPENSHIFT_APP_NAME;
+            	}
+            	var mongojs = require('mongojs');
+            	var db = mongojs(connection_string, ['login']);
+            	var logins = db.collection('login');
+            	// similar syntax as the Mongo command-line interface
+            	// log each of the first ten docs in the collection
+            	var retJson;
+           // 	db.policies.find({first_name: req.query.first_name}, {last_name: req.query.last_name}).forEach(function(err, doc) {
+                if(!req.query.username) {
+                    return res.send({"status": "error", "message": "missing username."});
+                 } else {
+                	 res.setHeader('Content-Type', 'application/json'); 
+                 	logins.find({"username": req.query.username, "password": req.query.password}).forEach(function(err, doc) {  
+                  	  if (err) throw err;
+                  	  if (doc) { console.log(doc.logins);
+                  		  		 console.dir(doc);
+                  	             retJson = JSON.stringify(doc.logins);
+                  	             console.log(retJson);
+                  	           return res.send(retJson);}
+                  	  else {
+                  		  res.writeHead(404);
+                  		  return res.send(null);}
+                  	}); 
+        //        	res.setHeader('Content-Type', 'application/json');
+        //            return res.send(retJson);
+                }
+            };
+       
+            self.routes['/session'] = function(req, res) {
+            	// default to a 'localhost' configuration:
+            	var connection_string = '127.0.0.1:27017/valuation';
+            	// if OPENSHIFT env variables are present, use the available connection info:
+            	if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
+            	  connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
+            	  process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
+            	  process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+            	  process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
+            	  process.env.OPENSHIFT_APP_NAME;
+            	}
+            	var mongojs = require('mongojs');
+            	var db = mongojs(connection_string, ['session']);
+            	var sessions = db.collection('session');
+            	// similar syntax as the Mongo command-line interface
+            	// log each of the first ten docs in the collection
+           // 	db.policies.find({first_name: req.query.first_name}, {last_name: req.query.last_name}).forEach(function(err, doc) {
+                if(!req.query.psid) {
+                    return res.send({"status": "error", "message": "missing psid."});
+                 } else {
+                	 res.setHeader('Content-Type', 'application/json'); 
+                 	sessions.save({"psid": req.query.psid, "custid": req.query.custid});
+                 	res.end();
+        //        	res.setHeader('Content-Type', 'application/json');
+        //            return res.send(retJson);
+                }
+            };    
+        
         self.routes['/'] = function(req, res) {
             res.setHeader('Content-Type', 'text/html');
             res.send(self.cache_get('index.html') );

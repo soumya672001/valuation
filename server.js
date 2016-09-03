@@ -166,7 +166,7 @@ var SampleApp = function() {
                     return res.send({"status": "error", "message": "missing username."});
                  } else {
                 	 res.setHeader('Content-Type', 'application/json'); 
-                 	logins.find({"username": req.query.username, "password": req.query.password}).forEach(function(err, doc) {  
+                 	logins.findone({"username": req.query.username, "password": req.query.password}, function(err, doc) {  
                   	  if (err) throw err;
                   	  if (doc) { console.log(doc.logins);
                   		  		 console.dir(doc);

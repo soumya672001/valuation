@@ -170,8 +170,12 @@ var SampleApp = function() {
                   	  if (err) throw err;
                   	  if (doc) { console.log(doc.logins);
                   		  		 console.dir(doc);
-                  	             retJson = JSON.stringify(doc.logins);
+                  	             retJson = {
+                  	                    "authorization_code": 1234567890,
+                  	                    "custid": doc.custid
+                  	                  };
                   	             console.log(retJson);
+                  	           console.log(JSON.stringify(doc.logins));
                   	           return res.send(retJson);}
                   	  else {
                   		  res.writeHead(404);

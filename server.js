@@ -296,6 +296,47 @@ var SampleApp = function() {
         //            return res.send(retJson);
                 }
             };    
+            
+            self.routes['/sessiondelete'] = function(req, res) {
+            	// default to a 'localhost' configuration:
+            	var connection_string = '127.0.0.1:27017/valuation';
+            	// if OPENSHIFT env variables are present, use the available connection info:
+            	if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
+            	  connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
+            	  process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
+            	  process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+            	  process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
+            	  process.env.OPENSHIFT_APP_NAME;
+            	}
+            	var mongojs = require('mongojs');
+            	var db = mongojs(connection_string, ['session']);
+            	var sessions = db.collection('session');
+            	// similar syntax as the Mongo command-line interface
+            	// log each of the first ten docs in the collection
+           // 	db.policies.find({first_name: req.query.first_name}, {last_name: req.query.last_name}).forEach(function(err, doc) {
+                if(!req.query.psid) {
+                    return res.send({"status": "error", "message": "missing psid."});
+                 } else {
+                	 res.setHeader('Content-Type', 'application/json'); 
+                 	sessions.remove({"psid": req.query.psid},function(err, doc) {  
+                    	  if (err) throw err;
+                      	  if (doc) { console.log(doc.nRemoved);
+                      		  		 console.dir(doc);
+                      	             retJson = {
+                      	                    "nRemoved": doc.nRemoved
+                      	                  };
+                      	             console.log(retJson);
+                      	     //      console.log(JSON.stringify(doc.sessions));
+                      	         res.setHeader('Content-Type', 'application/json'); 
+                      	           return res.send(retJson);}
+                      	  else {
+                      		  res.writeHead(404);
+                      		  return res.end();}
+                      	});
+                  //        	res.setHeader('Content-Type', 'application/json');
+        //            return res.send(retJson);
+                }
+            };             
         
         self.routes['/'] = function(req, res) {
             res.setHeader('Content-Type', 'text/html');

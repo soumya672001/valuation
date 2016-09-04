@@ -320,10 +320,10 @@ var SampleApp = function() {
                 	 res.setHeader('Content-Type', 'application/json'); 
                  	sessions.remove({"psid": req.query.psid},function(err, doc) {  
                     	  if (err) throw err;
-                      	  if (doc) { console.log(doc.nRemoved);
+                      	  if (doc) { console.log(doc.n);
                       		  		 console.dir(doc);
                       	             retJson = {
-                      	                    "nRemoved": doc.nRemoved
+                      	                    "n": doc.n
                       	                  };
                       	             console.log(retJson);
                       	     //      console.log(JSON.stringify(doc.sessions));

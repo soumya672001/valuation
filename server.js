@@ -360,7 +360,7 @@ var SampleApp = function() {
                     return res.send({"status": "error", "message": "missing policy."});
                  } else {
                      //	 res.setHeader('Content-Type', 'application/json'); 
-                  	values.findOne({"policy": req.query.pplicy}, function(err, doc) {  
+                  	values.findOne({"policy": req.query.policy}, function(err, doc) {  
                    	  if (err) throw err;
                    	  if (doc) { console.log(doc.sessions);
                    		  		 console.dir(doc);
